@@ -58,7 +58,6 @@
   import { placeholderie } from '@/components/Mixin/placeholderie'
   import { editAccount, submitAccount,verifyAccount,AccountInfo} from '@/api/accountDetail'
   import {findRoleByAccount} from '@/api/role'
-  import {getCommandCardList} from '@/api/command'
   import {groupSelect,groupSelectEdit} from '@/api/group'
   import { isvalidPhone, validateNumberAndEnglish } from '@/utils/validate'
   import { fixie9input } from '@/components/Mixin/fixie9input'

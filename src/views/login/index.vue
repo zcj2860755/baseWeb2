@@ -88,7 +88,7 @@
     },
     mixins: [fixie9input],
     created(){
-      
+
       this.getCookie()
       this.ieForm.username = this.loginForm.username
       this.ieForm.password = this.loginForm.password
@@ -144,7 +144,7 @@
                 }else{
                   this.clearCookiePwd()
                 }
-                this.$router.push({path: '/home/index2'})
+                this.$router.push({path: '/system/account'})
               }else{
                 this.loading = false
                   this.$message.error(response.message)

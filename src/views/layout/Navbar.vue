@@ -27,7 +27,7 @@
           <a href="#" @click="jump('/message/inbox')"><img src="../../assets/images/email.png"/>未读消息{{count}}条</a>
         </div>
       </div> -->
-      <div class="noticeCount">
+     <!-- <div class="noticeCount">
         <router-link class='inlineBlock fr' to="/message/inbox" title="收件箱">
           <img src="../../assets/images/inbox.png" width="35" height="35"/>
           <div class="numCount" v-if="noticeCount!=0"><el-badge :value="noticeCount" :max="99" v-model="noticeCount"></el-badge></div>
@@ -38,7 +38,7 @@
           <img src="../../assets/images/sos.png" width="35" height="35"/>
           <div class="numCount" v-if="sosCount!=0"><el-badge :value="sosCount" :max="99" v-model="sosCount"></el-badge></div>
         </router-link>
-      </div>
+      </div>-->
       <div class="dayData"><i class="el-icon-date"></i> {{dayData1}}(农历{{dayData}})</div>
       <div  class="loginUser">
         <div class="login-name">{{account}} 欢迎您！</div>
@@ -54,7 +54,6 @@ import URLConfig from '@/config'
 import Sidebar from './Sidebar'
 import { getAccountId,getAccount,getRealName} from '@/utils/auth'
 import {showCal} from '@/utils/index'
-import {inboxunRead} from  '@/api/inbox'
 
 export default {
 
@@ -180,17 +179,6 @@ export default {
       // this.show=!this.show
       this.$emit('show',this.show)
     },
-    fetchData() {
-      inboxunRead().then(response =>
-      {
-        if (response.data != null && response.data.length > 0) {
-          this.count = response.data.length;
-        } else {
-          this.count = 0;
-        }
-      })
-
-    }
   }
 }
 </script>
@@ -202,7 +190,7 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
     $light_gray: #282828;
-    
+
     .noticeCount{
       float: right;
       color: #0C1E38;

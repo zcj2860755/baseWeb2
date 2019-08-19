@@ -85,12 +85,6 @@
               style="width:100%">
             </el-cascader>
           </el-form-item>
-          <el-form-item label="指挥卡" prop="command_id">
-            <el-select v-model="formData.command_id" placeholder="请选择所属的指挥卡" style="width:100%">
-              <el-option v-for="item in commands" :key="item.id" :label="item.name" :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
         </el-form>
       </el-row>
       <span slot="footer" class="dialog-footer">
@@ -113,7 +107,6 @@
   import { placeholderie } from '@/components/Mixin/placeholderie'
   import { editAccount, submitAccount,verifyAccount,AccountInfo} from '@/api/accountDetail'
   import {findRoleByAccount} from '@/api/role'
-  import {getCommandCardList} from '@/api/command'
   import {groupSelect,groupSelectEdit} from '@/api/group'
   import { isvalidPhone, validateNumberAndEnglish } from '@/utils/validate'
   import { fixie9input } from '@/components/Mixin/fixie9input'
@@ -151,11 +144,6 @@
           pageNo: 1,
           pageSize: 10
         },
-        commonList: {
-          keyWord:'',
-          pageNo: 1,
-          pageSize: 0
-        },
         total: 1000,
         list: null,
         listLoading: true,
@@ -180,7 +168,6 @@
         countyindex: '',
         response: [],
         roles:[],
-        commands:[],
         groupId:[],
         formData: {
           account: '',
@@ -188,7 +175,6 @@
           realName: '',
           groupId:'',
           roleId:'',
-          command_id:'',
         },
         ieForm:{
           pass: '',
@@ -212,9 +198,6 @@
           ],
           roleId: [
             { required: true, message: '请选择角色', trigger: 'change' }
-          ],
-          command_id: [
-            { required: true, message: '请选择指挥卡', trigger: 'change' }
           ]
         }
       }
@@ -223,11 +206,7 @@
       ...mapGetters(['permission_routers']),
     },
     mixins: [btnauth,placeholderie,fixie9input],
-    created() {
-      this.fetchData()
-      this.findRoleByAccount()
-      this.getCommandCardList(this.commonList)
-    },
+
     mounted() {
       let screenHeight=document.documentElement.clientHeight;
       this.tableHeight = screenHeight-305 +'px';
@@ -568,7 +547,6 @@
           that.realName = response.data.realName
           that.status = response.data.status.toString()
           that.roleId = response.data.roleId
-          that.command_id = response.data.command_id
           that.groupId = response.data.groupId
           this.oldVue= response.data.account
           this.groupChange2(groupId)
@@ -578,12 +556,6 @@
       findRoleByAccount(id){
         findRoleByAccount().then(response => {
           this.roles = response.data
-        })
-      },
-      getCommandCardList(){
-        getCommandCardList(this.commonList).then(response => {
-          this.commands = response.data.list
-          console.log("test:"+response.data.list)
         })
       },
       submitForm (formName) {
@@ -596,7 +568,6 @@
               params.account = this.formData.account;
               params.password = this.formData.password;
               params.realName = this.formData.realName;
-              params.command_id = this.formData.command_id;
               params.roleId = this.formData.roleId;
               params.groupId = this.formData.groupId;
               submitAccount(params).then(response => {
@@ -623,7 +594,6 @@
               params.status = this.formData.status;
               params.roleId = this.formData.roleId;
               params.groupId = this.formData.groupId;
-              params.command_id = this.formData.command_id;
               editAccount(params).then(response => {
                 if (response.success) {
                   this.$message({

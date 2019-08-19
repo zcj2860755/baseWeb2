@@ -23,9 +23,9 @@ Vue.use(Router)
 export const constantRouterMap = [
   {path: '/login', component: _import('/login/index'), hidden: true},
   {path: '/404', component: _import('/404'), hidden: true},
-  {path: '/home/index2', component: _import('/home/index2'), hidden: true},
+  {path: '/system/account', component: _import('/system/account'), hidden: true},
 
-  {
+ /* {
     path: '/home', // views中文件夹的名称，下面的children为vue文件的名称
     component: Layout,
     hidden: true,
@@ -33,9 +33,9 @@ export const constantRouterMap = [
     name: '首页',
     icon: 'home',
     children: [
-      /*{path: 'index', name: '综合统计', component: _import('/home/index')},*/
+      /!*{path: 'index', name: '综合统计', component: _import('/home/index')},*!/
     ]
-  },
+  },*/
 
 
   // 这里是在本地添加路由的示例(没有权限控制),28-39行;使用时复制，并修改对应名称及路径
@@ -51,7 +51,7 @@ export const constantRouterMap = [
       {path: 'index', name: '综合统计', component: _import('/home/index')},
     ]
   },*/
- {
+ /*{
     path: '/message', // views中文件夹的名称，下面的children为vue文件的名称
     noDropdown: false,
     component: Layout,
@@ -60,15 +60,15 @@ export const constantRouterMap = [
     icon: 'duanxinguanli',
     authType:'1',
     children: [
-      /*{path: 'outbox', name: '发信息', authType:'1',component: _import('/message/outbox')},
+      /!*{path: 'outbox', name: '发信息', authType:'1',component: _import('/message/outbox')},
       {path: 'inbox', name: '收件箱', authType:'1',component: _import('/message/inbox')},
       {path: 'hasSend', name: '已发送', authType:'1',component: _import('/message/hasSend')},
       {path: 'draft', name: '草稿箱', authType:'1',component: _import('/message/draft')},
       {path: 'mailList', name: '通讯录', authType:'1',component: _import('/message/mailList')},
-      {path: 'mailGroup', name: '通讯录分组', authType:'2',component: _import('/message/mailGroup')}*/
+      {path: 'mailGroup', name: '通讯录分组', authType:'2',component: _import('/message/mailGroup')}*!/
     ]
-  },
- {
+  },*/
+ /*{
     path: '/location', // views中文件夹的名称，下面的children为vue文件的名称
     noDropdown: true,
     component: Layout,
@@ -77,10 +77,10 @@ export const constantRouterMap = [
     icon: 'dingweiguanli',
     authType:'1',
     children: [
-      /* {path: 'point', name: '实时位置', authType:'1',component: _import('/location/location')},
-      {path: 'track', name: '历史轨迹', authType:'1',component: _import('/location/track')}*/
+      /!* {path: 'point', name: '实时位置', authType:'1',component: _import('/location/location')},
+      {path: 'track', name: '历史轨迹', authType:'1',component: _import('/location/track')}*!/
     ]
-  },
+  },*/
   {
     path: '/base', // views中文件夹的名称，下面的children为vue文件的名称
     noDropdown: true,
@@ -93,7 +93,7 @@ export const constantRouterMap = [
       /* {path: 'group', name: '分组管理', authType:'1',component: _import('/base/group')}*/
     ]
   },
-  {
+  /*{
     path: '/card', // views中文件夹的名称，下面的children为vue文件的名称
     noDropdown: true,
     component: Layout,
@@ -102,16 +102,16 @@ export const constantRouterMap = [
     icon: 'shebeiguanli',
     authType:'1',
     children: [
-      /*{path: 'cardList', name: '北斗民用IC卡管理', authType:'1',component: _import('/card/cardList')},
+      /!*{path: 'cardList', name: '北斗民用IC卡管理', authType:'1',component: _import('/card/cardList')},
       {path: 'cardAdd', name: '北斗民用IC卡新增', authType:'2',component: _import('/card/cardEdit')},
       {path: 'cardEdit', name: '北斗民用IC卡编辑', authType:'2',component: _import('/card/cardEdit')},
       {path: 'deviceList', name: '北斗民用终端管理', authType:'1',component: _import('/device/deviceList')},
       {path: 'deviceAdd', name: '北斗民用终端新增', authType:'2',component: _import('/device/deviceEdit')},
       {path: 'deviceEdit', name: '北斗民用终端编辑', authType:'2',component: _import('/device/deviceEdit')},
-      {path: 'command', name: '指挥机管理', authType:'1',component: _import('/device/command')}*/
+      {path: 'command', name: '指挥机管理', authType:'1',component: _import('/device/command')}*!/
     ]
-  },
- {
+  },*/
+ /*{
     path: '/sos', // views中文件夹的名称，下面的children为vue文件的名称
     noDropdown: true,
     component: Layout,
@@ -120,9 +120,9 @@ export const constantRouterMap = [
     icon: 'yingjijiuyuan',
     authType:'1',
     children: [
-      /* {path: 'sosInbox', name: '一键SOS', authType:'1',component: _import('/message/sosInbox')}*/
+      /!* {path: 'sosInbox', name: '一键SOS', authType:'1',component: _import('/message/sosInbox')}*!/
     ]
-  },
+  },*/
   {
     path: '/system', // views中文件夹的名称，下面的children为vue文件的名称
     noDropdown: false,
@@ -141,8 +141,8 @@ export const constantRouterMap = [
       {path: 'account/accountEdit', name: '用户管理编辑', authType:'2', component: _import('/system/accountEdit')},
       {path: 'roleDetail', name: '角色管理详情', authType:'2', component: _import('/system/roleDetail')}
     ]
-  },
-  {
+  }
+  /*{
     path: '/card', // views中文件夹的名称，下面的children为vue文件的名称
     noDropdown: false,
     component: Layout,
@@ -155,7 +155,7 @@ export const constantRouterMap = [
       {path: 'deviceList/deviceAdd', name: '北斗民用终端新增', authType:'2',component: _import('/card/deviceEdit')},
       {path: 'deviceList/deviceEdit', name: '北斗民用终端编辑', authType:'2',component: _import('/card/deviceEdit')},
     ]
-  },
+  },*/
    /*  {
     path: '/card', // views中文件夹的名称，下面的children为vue文件的名称
     noDropdown: true,
