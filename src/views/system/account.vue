@@ -1,8 +1,8 @@
 <template>
-  <div class="app-small">
+  <div class="app-small"  style="background:#fff;">
     <table-operate >
-      <el-button type="primary" size="small"  v-if="hasAuth('accountAdd')" @click="gotoform">添加</el-button>
-      <el-button type="danger" size="small" v-if="hasAuth('accountDelete')" @click="batchRemove">删除</el-button>
+      <el-button type="primary" size="small"  @click="gotoform">添加</el-button>
+      <el-button type="danger" size="small"  @click="batchRemove">删除</el-button>
     </table-operate>
     <table-search>
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
@@ -15,7 +15,7 @@
       </el-form>
     </table-search>
     <div class="app-container">
-      <el-table :data="list" :height="tableHeight" v-loading.body="listLoading" element-loading-text="拼命加载中" @selection-change="handleSelectionChange"  border fit stripe style="with:100%">
+      <el-table :data="list" :height="tableHeight"  element-loading-text="拼命加载中" @selection-change="handleSelectionChange"  border fit stripe style="with:100%">
         <el-table-column type="selection" width="60" align="center"/>
         <el-table-column prop="account" label="账号" width="160"/>
         <el-table-column prop="realName" label="姓名" min-width="180"/>
@@ -29,12 +29,12 @@
         </el-table-column>
         <el-table-column label="操作" align="center" min-width="180">
           <template slot-scope="scope">
-            <el-button size="medium" style="color:#4687BE" type="text" v-if="hasAuth('accountEdit')" @click="edit(scope.row.id,scope.row.groupId)">编辑</el-button>
-            <template v-if="hasAuth('accountFreeze')">
+            <el-button size="medium" style="color:#4687BE" type="text" @click="edit(scope.row.id,scope.row.groupId)">编辑</el-button>
+            <template >
             <el-button size="medium" style="color:#4687BE" type="text"  @click="stop(scope.row.id,scope.row.status)" v-if="scope.row.status==0">停用</el-button>
             <el-button size="medium" style="color:#4687BE" type="text"  @click="stop(scope.row.id,status)" v-if="scope.row.status==1">启用</el-button>
            </template>
-            <el-button size="medium" style="color:#F78989" type="text" v-if="hasAuth('accountDelete')"@click="remove(scope.row.id)">删除</el-button>
+            <el-button size="medium" style="color:#F78989" type="text"  @click="remove(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
