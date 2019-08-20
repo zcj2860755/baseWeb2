@@ -1,4 +1,4 @@
-import {getAllDic} from '@/api/dataDar'
+// import {getAllDic} from '@/api/dataDar'
 import {authList} from '@/api/auth'
 // import {getRoleAuth} from '@/api/role'
 const allDic = {
@@ -25,17 +25,17 @@ const allDic = {
   },
   actions: {
     // 获取所有字典集合
-    AllDic({commit}) {
-      return new Promise((resolve, reject) => {
-        getAllDic().then(response => {
-          // console.log(response)
-          let data = response.data
-          // setAllDic(data.data)
-          commit('SET_ALL_DIC', data)
-          // commit('SET_ACCOUNTSEX', data.accountSex.dictionary)
-        })
-      })
-    },
+    // AllDic({commit}) {
+    //   return new Promise((resolve, reject) => {
+    //     getAllDic().then(response => {
+    //       // console.log(response)
+    //       let data = response.data
+    //       // setAllDic(data.data)
+    //       commit('SET_ALL_DIC', data)
+    //       // commit('SET_ACCOUNTSEX', data.accountSex.dictionary)
+    //     })
+    //   })
+    // },
     AuthSign({commit}, data) {
       return new Promise((resolve, reject) => {
         // console.log('data')

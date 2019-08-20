@@ -14,7 +14,7 @@
       <div class="main">
         <div class="main-head">
             <img src="../../assets/images/logo.png" class="logo"/>
-            <h3 class="title">北斗短报文智慧管理平台<h4>BeiDou Short Message Intelligent Management Platform</h4></h3>
+            <h3 class="title">基础模块公共页面</h3>
         </div>
 
         <el-form-item prop="username" style="position:relative;top:-5px">
@@ -131,7 +131,10 @@
         // this.$refs.loginForm.validate(valid => {
         //   if (valid) {
             this.loading = true
+            console.log(this.ieForm.username)
+            console.log(this.ieForm.password)
             this.$store.dispatch('Login', this.loginForm).then(response => {
+              console.log(response)
               if(response.success){
                 this.loading = false
                 if (this.checked) {
@@ -144,7 +147,7 @@
                 }else{
                   this.clearCookiePwd()
                 }
-                this.$router.push({path: '/system/account'})
+                this.$router.push({path: '/system/base'})
               }else{
                 this.loading = false
                   this.$message.error(response.message)

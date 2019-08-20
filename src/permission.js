@@ -9,30 +9,30 @@ router.beforeEach((to, from, next) => {
   NProgress.start()
   if ( (getToken() || store.getters.token)&&store.getters.token!='zdzcadminloginsuccess') {
     if (to.path === '/login') {
-      next({path: '/home'})
+      next({path: '/base'})
     } else {
-      if (store.getters.flag.length == 0) {
-        store.dispatch('RoleAuth').then(response => {
-          const rowRouter = response.data
-          store.dispatch('GenerateRoutes', {rowRouter}).then(() => {
-            router.addRoutes(store.getters.addRouters)
-            next({...to})
-          })
-        })
+      // if (store.getters.flag.length == 0) {
+      //   store.dispatch('RoleAuth').then(response => {
+      //     const rowRouter = response.data
+      //     store.dispatch('GenerateRoutes', {rowRouter}).then(() => {
+      //       router.addRoutes(store.getters.addRouters)
+      //       next({...to})
+      //     })
+      //   })
         // 字典
-        store.dispatch('AllDic').then(response => {
-        })
+        // store.dispatch('AllDic').then(response => {
+        // })
         // 收件箱未读消息
-        store.dispatch('NoticeCount').then(response => {
-        })
+        // store.dispatch('NoticeCount').then(response => {
+        // })
         // store.dispatch('AuthSign').then(response => {
         // })
 
         // store.dispatch('AuthRoute').then(response => {
         // })
-      } else {
+      // } else {
         next()
-      }
+      // }
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) {

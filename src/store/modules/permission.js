@@ -63,7 +63,7 @@ const permission = {
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {
-      state.addRouters = routers
+      //state.addRouters = routers
       state.routers = constantRouterMap.concat(routers)
       // console.log(state.routers)
       // var last = [{path: '/404', redirect: '/404', hidden: true}]
@@ -87,7 +87,7 @@ const permission = {
           treenode.children = childrenList
           // console.log('tree' + treenode)
           // console.log(childrenList)
-          // console.log(treenode)
+          console.log(treenode)
           accessedRouters.push(treenode)
         })
         // console.log(accessedRouters)

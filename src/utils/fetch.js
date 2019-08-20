@@ -26,13 +26,7 @@ service.interceptors.request.use(config => {
     //   config.url += '?' + Qs.stringify({'JSESSIONID': store.getters.JSESSIONID})
     // }
   }
-  // if (store.getters.account) {
-  //   config.headers['account'] = getAccount()
-  // }
-  if (store.getters.accountId) {
-    //config.headers['accountId'] = getAccountId()
-    config.headers['accountId'] = store.getters.getAccountId
-  }
+
   var date = new Date();
   if(config.params){
     config.params.timestamp = date.getTime()
@@ -40,7 +34,7 @@ service.interceptors.request.use(config => {
     config.params = {}
     config.params.timestamp = date.getTime()
   }
-  config.headers['Test'] = 'zdzc'
+  config.headers['token'] = getToken()
   return config
 }, error => {
   // Do something with request error

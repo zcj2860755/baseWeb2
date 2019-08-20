@@ -127,16 +127,16 @@ export const constantRouterMap = [
     path: '/system', // views中文件夹的名称，下面的children为vue文件的名称
     noDropdown: false,
     component: Layout,
-    redirect: '/system/account',
+    redirect: '/system/base',
     name: '系统管理',
     icon: 'setup',
     children: [
-      // {path: 'base', name: '基础参数', authType:'1', component: _import('/system/base')},
-      // {path: 'auth', name: '权限参数', authType:'1', component: _import('/system/auth')},
-      // {path: 'categoryList', name: '字典类别', authType:'1', component: _import('/system/categoryList')},
+      {path: 'base', name: '基础参数', authType:'1', component: _import('/system/base')},
+      {path: 'auth', name: '权限参数', authType:'1', component: _import('/system/auth')},
+      {path: 'categoryList', name: '字典类别', authType:'1', component: _import('/system/categoryList')},
       {path: 'dicList', name: '字典类别详情', authType:'2', component: _import('/system/dicList')},
-      // {path: 'account', name: '账号管理', authType:'1', component: _import('/system/account')},
-      // {path: 'role', name: '角色管理', authType:'1', component: _import('/system/role')},
+      {path: 'account', name: '账号管理', authType:'1', component: _import('/system/account')},
+      {path: 'role', name: '角色管理', authType:'1', component: _import('/system/role')},
       {path: 'account/accountAdd', name: '用户管理新增', authType:'2', component: _import('/system/accountEdit')},
       {path: 'account/accountEdit', name: '用户管理编辑', authType:'2', component: _import('/system/accountEdit')},
       {path: 'roleDetail', name: '角色管理详情', authType:'2', component: _import('/system/roleDetail')}

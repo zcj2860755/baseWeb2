@@ -102,8 +102,8 @@ export default {
     var now = new Date(); //当前日期
     this.dayData1=now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate()
     this.dayData=showCal()
-    this.fetchData()
-    this.socketInit()
+    //this.fetchData()
+    //this.socketInit()
   },
   methods: {
     socketInit: function () {
