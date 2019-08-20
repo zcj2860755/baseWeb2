@@ -14,31 +14,14 @@ const service = axios.create({
 
 // request拦截器
 service.interceptors.request.use(config => {
-  // console.log(store.getters.token)
-  if (store.getters.token) {
-    config.headers['token'] = store.getters.token // 让每个请求携带自定义token 请根据实际情况自行修改
-  }
-  if (store.getters.JSESSIONID) {
-    config.headers['JSESSIONID'] = store.getters.JSESSIONID
-    // if (config.params) {
-    //   config.url += '&' + Qs.stringify({'JSESSIONID': store.getters.JSESSIONID})
-    // } else {
-    //   config.url += '?' + Qs.stringify({'JSESSIONID': store.getters.JSESSIONID})
-    // }
-  }
-
   var date = new Date();
-  if(config.params){
-    config.params.timestamp = date.getTime()
-  }else{
+  if(!config.params){
     config.params = {}
-    config.params.timestamp = date.getTime()
   }
-  config.headers['token'] = getToken()
+  config.params.timestamp = date.getTime()
+  config.headers['Token'] = getToken()
   return config
 }, error => {
-  // Do something with request error
-  //console.log(error) // for debug
   Promise.reject(error)
 })
 
@@ -66,7 +49,7 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error)// for debug
-    if (error.response.status === 401) {
+    if (error.response.statusCode === 401) {
       MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
         confirmButtonText: '重新登录',
         type: 'warning'
@@ -75,10 +58,10 @@ service.interceptors.response.use(
           location.reload()// 为了重新实例化vue-router对象 避免bug
         })
       })
-    } else if (error.response.status === 404) {
+    } else if (error.response.statusCode === 404) {
       //TODO 处理404页面
     } else {
-      if (error.response.data.statusCode === 40000) {
+      if (error.response.statusCode === 40000) {
         MessageBox.confirm('你的访问授权已过期，请重新登录', '确定登出', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',

@@ -12,23 +12,15 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       // 真实数据接口代理
-      // '/rest': {
-      //   target: 'http://114.55.10.15:8764', //测试服配置
-      //   // target: 'http://localhost:8764',
-      //   changeOrigin: true,
-      //   pathRewrite: {
-      //     '^/rest': ''
-      //   }
-      // }
+      '/base': {
+        target: 'http://192.168.1.201:8099', //基础模块地址
+        // target: 'http://localhost:8764',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/base': '/base'
+        }
+      }
 
-      // Mock数据接口代理：Easy Mock
-      // '/rest': {
-      //   target: ' https://www.easy-mock.com/mock/5acd7dc9a58e7a7358fcdbe4/nba/rest',
-      //   changeOrigin: true,
-      //   pathRewrite: {
-      //     '^/rest': ''
-      //   }
-      // }
     },
 
     // Various Dev Server settings

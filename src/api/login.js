@@ -18,7 +18,7 @@ import Qs from 'qs'
 
 export function login (username, password) {
   return fetch({
-    url: '/account/login',
+    url: '/base/account/login',
     method: 'post',
     data: Qs.stringify({ account: username, password: password })
   })
