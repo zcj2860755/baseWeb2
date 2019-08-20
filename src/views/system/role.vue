@@ -1,8 +1,8 @@
 <template>
   <div class="app-small">
     <table-operate >
-      <el-button type="primary" size="small" v-if="hasAuth('roleAdd')" @click="gotoform">添加</el-button>
-      <el-button type="danger" size="small" v-if="hasAuth('roleDelete')" @click="batchRemove">删除</el-button>
+      <el-button type="primary" size="small"  @click="gotoform">添加</el-button>
+      <el-button type="danger" size="small"  @click="batchRemove">删除</el-button>
     </table-operate>
      <table-search>
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
@@ -21,8 +21,8 @@
         <el-table-column prop="createTime" label='创建时间' style="width:10%" :formatter="dateFormat"></el-table-column>
         <el-table-column label="操作" style="width:10%" align="center">
           <template slot-scope="scope">
-            <el-button size="medium" type="text" v-if="hasAuth('roleEdit')"  @click="edit(scope.row.id)">编辑</el-button>
-            <el-button size="medium" v-if="hasAuth('roleDelete')" style="color:#F78989" type="text" @click="remove(scope.row.id)">删除</el-button>
+            <el-button size="medium" type="text"    @click="edit(scope.row.id)">编辑</el-button>
+            <el-button size="medium"  style="color:#F78989" type="text" @click="remove(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
