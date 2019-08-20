@@ -1,7 +1,7 @@
 <template>
   <div class="app-small">
     <table-operate>
-      <el-button type="primary" size="small"  v-if="hasAuth('baseAdd')" @click="gotoform">添加</el-button>
+      <el-button type="primary" size="small" @click="gotoform">添加</el-button>
     </table-operate>
     <table-search>
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
@@ -21,8 +21,8 @@
         <el-table-column prop="remark" label="备注" style="width:25%"></el-table-column>
         <el-table-column label="操作" style="width:10%" align="center">
           <template slot-scope="scope">
-            <el-button size="medium"  style="color:#4687BE"  v-if="hasAuth('baseEdit')" type="text" @click="edit(scope.row.id)">编辑</el-button>
-            <el-button size="medium"  style="color:#F78989"  v-if="hasAuth('baseDelete')"type="text" @click="remove(scope.row.id)">删除</el-button>
+            <el-button size="medium"  style="color:#4687BE"  type="text" @click="edit(scope.row.id)">编辑</el-button>
+            <el-button size="medium"  style="color:#F78989"  type="text" @click="remove(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
