@@ -9,7 +9,8 @@ export function getAccountList(params) {
     params: { //请求参数
       searchContent: params.keyword,
       pageNo: params.pageNo,
-      pageSize: params.pageSize
+      pageSize: params.pageSize,
+      uuid : 'be06b273469ea186d7ab212f973d33d2'
     }
   })
 }
