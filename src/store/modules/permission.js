@@ -43,11 +43,11 @@ const loop = {
     } else if (item.parentId === '0') {
       let childrenRoute = []
       let childrenRouteItem = {}
-      if(item.authUrl==='/system'){
-        userRoutesItem.redirect = item.authUrl + '/index'
-        childrenRouteItem.path = 'index'
-        childrenRouteItem.component = _import(path + '/index')
-      }
+      // if(item.authUrl==='/system'){
+      //   userRoutesItem.redirect = item.authUrl + '/index'
+      //   childrenRouteItem.path = 'index'
+      //   childrenRouteItem.component = _import(path + '/index')
+      // }
       childrenRoute.push(childrenRouteItem)
       userRoutesItem.children = childrenRoute
 

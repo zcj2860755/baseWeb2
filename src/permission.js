@@ -11,14 +11,14 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next({path: '/base'})
     } else {
-      // if (store.getters.flag.length == 0) {
-      //   store.dispatch('RoleAuth').then(response => {
-      //     const rowRouter = response.data
-      //     store.dispatch('GenerateRoutes', {rowRouter}).then(() => {
-      //       router.addRoutes(store.getters.addRouters)
-      //       next({...to})
-      //     })
-      //   })
+      if (store.getters.flag.length == 0) {
+        store.dispatch('RoleAuth').then(response => {
+          const rowRouter = response.data
+          store.dispatch('GenerateRoutes', {rowRouter}).then(() => {
+            router.addRoutes(store.getters.addRouters)
+            next({...to})
+          })
+        })
         // 字典
         // store.dispatch('AllDic').then(response => {
         // })
@@ -30,9 +30,9 @@ router.beforeEach((to, from, next) => {
 
         // store.dispatch('AuthRoute').then(response => {
         // })
-      // } else {
+       } else {
         next()
-      // }
+       }
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) {
