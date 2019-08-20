@@ -26,7 +26,7 @@ export function login (username, password) {
 
 export function logout (id) {
   return fetch({
-    url: '/account/logout',
+    url: 'base/account/logout',
     method: 'post',
     data: Qs.stringify({id: id })
   })

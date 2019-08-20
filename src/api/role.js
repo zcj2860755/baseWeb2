@@ -27,7 +27,7 @@ export function getRoleAuth (roleId) {
  //角色列表
  export function roleList(params) {
    return fetch({
-   url: '/role',
+   url: 'base/role/pageList',
    method: 'get',
      params: { //请求参数
        searchContent: params.keyword,
@@ -40,7 +40,7 @@ export function getRoleAuth (roleId) {
  //删除角色
 export  function deleteRole(params){
   return fetch({
-    url:'/role/'+params,
+    url:'base/role/'+params,
     method:'delete'
   })
 }

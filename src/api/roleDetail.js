@@ -4,7 +4,7 @@ import Qs from 'qs'
  //编辑角色
  export function editRole(roleId){
    return fetch({
-     url:'/role/'+roleId,
+     url:'base/role/'+roleId,
      method:'get',
     //  data: Qs.stringify({roleId:roleId})
    })
@@ -13,7 +13,7 @@ import Qs from 'qs'
  //获取权限树
  export function authTree(roleId){
    return fetch({
-     url:'/role/authTree',
+     url:'base/role/authTree',
      method:'post',
      data: Qs.stringify({roleId:roleId})
    })
@@ -22,7 +22,7 @@ import Qs from 'qs'
  //新增保存角色
  export function submitRoleAdd (params,authIds){
    return fetch({
-    url:'/role',
+    url:'base/role',
     method:'post',
     params,
     data:Qs.stringify({authIds:authIds})
@@ -32,7 +32,7 @@ import Qs from 'qs'
   //编辑保存角色
   export function submitRoleEdit (params,authIds){
     return fetch({
-     url:'/role',
+     url:'base/role',
      method:'put',
      params,
      data:Qs.stringify({authIds:authIds})
@@ -41,7 +41,7 @@ import Qs from 'qs'
 
  export function getRoles (roleId){
   return fetch({
-    url:'/role/authTree',
+    url:'base/role/authTree',
     method:'post',
     data: Qs.stringify({roleId:roleId})
   })
@@ -52,7 +52,7 @@ import Qs from 'qs'
    //console.log(roleSign)
    //console.log(roleId)
    return fetch({
-     url:'/role/existRoleSign',
+     url:'base/role/existRoleSign',
      method:'post',
      data: Qs.stringify({roleName:roleName})
    })
