@@ -131,8 +131,6 @@
         // this.$refs.loginForm.validate(valid => {
         //   if (valid) {
             this.loading = true
-            console.log(this.ieForm.username)
-            console.log(this.ieForm.password)
             this.$store.dispatch('Login', this.loginForm).then(response => {
               console.log(response)
               if(response.success){
