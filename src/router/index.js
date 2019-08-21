@@ -23,7 +23,6 @@ Vue.use(Router)
 export const constantRouterMap = [
   {path: '/login', component: _import('/login/index'), hidden: true},
   {path: '/404', component: _import('/404'), hidden: true},
-  
 
  /* {
     path: '/home', // views中文件夹的名称，下面的children为vue文件的名称
