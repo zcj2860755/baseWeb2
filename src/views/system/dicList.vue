@@ -8,8 +8,8 @@
       <el-table :data="list" :height="tableHeight" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit stripe
                 style="with:100%">
         <el-table-column prop="categoryName" label='类别名称' style="width:10%"></el-table-column>
-        <el-table-column prop="dicValue" label="字典编码" style="width:15%"></el-table-column>
-        <el-table-column prop="dicKey" label="字典名称" style="width:15%"></el-table-column>
+        <el-table-column prop="dicKey" label="字典编码" style="width:15%"></el-table-column>
+        <el-table-column prop="dicValue" label="字典名称" style="width:15%"></el-table-column>
         <el-table-column prop="isEnable" label="启用" style="width:10%">
           <template slot-scope="scope">
             <div v-if="scope.row.isEnable == 1">启用</div>
@@ -47,11 +47,11 @@
           <el-form-item label="类别名称" prop="categoryName">
             <el-input v-model="formData.categoryName" :disabled="disabled"></el-input>
           </el-form-item>
-          <el-form-item label="字典编码" prop="dicValue">
-            <el-input v-model="formData.dicValue" :disabled="disabled"></el-input>
+          <el-form-item label="字典编码" prop="dicKey">
+            <el-input v-model="formData.dicKey" :disabled="disabled"></el-input>
           </el-form-item>
-          <el-form-item label="字典名称" prop="dicKey">
-            <el-input v-model="formData.dicKey"></el-input>
+          <el-form-item label="字典名称" prop="dicValue">
+            <el-input v-model="formData.dicValue"></el-input>
           </el-form-item>
           <el-form-item label="启用" prop="isEnable">
             <el-select v-model="formData.isEnable" placeholder="">
@@ -82,11 +82,11 @@
           <el-form-item label="类别名称" prop="categoryName">
             <el-input v-model="formData.categoryName" :disabled="disabled"></el-input>
           </el-form-item>
-          <el-form-item label="字典编码" prop="dicValue">
-            <el-input v-model="formData.dicValue"></el-input>
-          </el-form-item>
-          <el-form-item label="字典名称" prop="dicKey">
+          <el-form-item label="字典编码" prop="dicKey">
             <el-input v-model="formData.dicKey"></el-input>
+          </el-form-item>
+          <el-form-item label="字典名称" prop="dicValue">
+            <el-input v-model="formData.dicValue"></el-input>
           </el-form-item>
           <el-form-item label="启用" prop="isEnable">
             <el-select v-model="formData.isEnable" placeholder="">
@@ -124,13 +124,30 @@
       TableOperate
     },
     data () {
+
       var validateAccount = (rule, value, callback) => {
-        if(!validateNumberAndEnglish(value)&&value!=''){
-          callback(new Error('请输入数字或英文!'))
-        }else{
-          callback()
-        }
+             if(!validateNumberAndEnglish(value)){
+               callback(new Error('请输入数字或英文!'))
+             }else{
+               callback()
+             }
+           }
+
+      var validateAccount2 = (rule, value, callback) => {
+          //if(!validateNumberAndEnglish(value)&&value!=''){
+          if(!new RegExp(/^[0-9]+$/).test(value)){     //  /^[1-9]\d*$/
+            callback(new Error('请输入数字!'))
+          }else if(value.length>10){
+            callback(new Error('位数不能超过10位'))
+          }
+          //else if(value.substring(0,1)=="0" || value.substring(0,1)==0 ){
+            //callback(new Error('首位不能是0!'))
+          //}
+          else{
+            callback()
+          }
       }
+
       return {
         categoryId:'',
         categoryPageNo:'',
@@ -186,12 +203,13 @@
           email: ''
         },
         rules: {
-          dicKey: [
+          dicValue: [
             { required: true, message: '请输入字典名称', trigger: 'blur' },
             { min: 0, max: 20, message: '请保持长度在 20 位及以下', trigger: 'blur' }
           ],
-          dicValue: [
+          dicKey: [
             { required: true, message: '请输入字典编码', trigger: 'blur' },
+            { min: 0, max: 20, message: '请保持长度在 20 位及以下', trigger: 'blur' },
             {validator: validateAccount, trigger: 'blur' }
           ],
           isEnable: [
@@ -199,7 +217,7 @@
           ],
           sortNo: [
             { required: true, message: '请输入排序', trigger: 'blur' },
-            {validator: validateAccount, trigger: 'blur' }
+            {validator: validateAccount2, trigger: 'blur' }
           ]
         }
       };
@@ -227,14 +245,14 @@
         this.listLoading = true
         dictionaryListDic(id).then(response => {
           // console.log(response)
-          this.list = response.data
+          this.list = response.data.list
           this.listLoading = false
           //this.categoryName=response.data[0].categoryName
         })
 
-        detailCategory(this.categoryId).then(response => {
-            this.categoryName=response.data.dicValue
-        })
+ // detailCategory(this.categoryId).then(response => {
+ //    this.categoryName=response.data.dicValue
+ // })
       },
       onSubmit: function () {
         this.fetchData()

@@ -7,7 +7,7 @@
     <table-search>
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
         <el-form-item label="关键字">
-          <el-input v-model="listQuery.searchContent" clearable placeholder="字典编码/字典名称/描述" @keyup.enter.native="onSubmit"/>
+          <el-input v-model="listQuery.keyWords" clearable placeholder="字典编码/字典名称/描述" @keyup.enter.native="onSubmit"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" @click="onSubmit">查询</el-button>
@@ -135,6 +135,7 @@
       TableOperate
     },
     data () {
+
       var validateAccount = (rule, value, callback) => {
         if(!validateNumberAndEnglish(value)){
           callback(new Error('请输入数字或英文!'))
@@ -142,6 +143,22 @@
           callback()
         }
       }
+
+    var validateAccount2 = (rule, value, callback) => {
+              //if(!validateNumberAndEnglish(value)&&value!=''){
+              if(!new RegExp(/^[0-9]+$/).test(value)){
+                callback(new Error('请输入数字!'))
+              }else if(value.length>10){
+                callback(new Error('位数不能超过10位'))
+              }
+              //else if(value.subString(0,1)=="0" || value.subString(0,1)==0 ){
+                //callback(new Error('首位不能是0!'))
+              //}
+              else{
+                callback()
+              }
+          }
+
       return {
         tableHeight:' ',
         listQuery: {
@@ -205,7 +222,8 @@
             { required: true, message: '请选择是否启用', trigger: 'blur' },
           ],
           sortNo: [
-              { required: true, message: '请输入排序', trigger: 'blur' }
+              { required: true, message: '请输入排序', trigger: 'blur' },
+              {validator: validateAccount2, trigger: 'blur' }
           ]
         }
       };

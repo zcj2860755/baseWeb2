@@ -4,10 +4,10 @@ import Qs from 'qs'
 //类别列表
 export function dictionaryList(params) {
     return fetch({
-        url: '/sys/dicCategory',
-        method: 'get',
+        url: '/base/dic/category/pageList',
+        method: 'post',
         params: { //请求参数
-            searchContent: params.searchContent,
+            keyWords : params.keyWords,
             pageNo: params.pageNo,
             pageSize: params.pageSize
         }
@@ -17,7 +17,7 @@ export function dictionaryList(params) {
 //类别编辑
 export function detailCategory(categoryId) {
     return fetch({
-        url: '/sys/dicCategory/dicDetail',
+        url: '/base/dic/category/findById',
         method: 'get',
         data: Qs.stringify({categoryId:categoryId}),
         params:{
@@ -29,7 +29,7 @@ export function detailCategory(categoryId) {
 //类别编辑提交
 export function submitCategory(params) {
     return fetch({
-        url: '/sys/dicCategory',
+        url: '/base/dic/category',
         method: 'put',
         params
     })
@@ -38,7 +38,7 @@ export function submitCategory(params) {
 //新增字典类别
 export function submitAddCategory(params) {
     return fetch({
-        url: '/sys/dicCategory',
+        url: '/base/dic/category',
         method: 'post',
         params
     })
@@ -47,7 +47,7 @@ export function submitAddCategory(params) {
 //类别删除
 export function deleteCategory(params) {
     return fetch({
-        url: '/sys/dicCategory/deleteDicCategory',
+        url: '/base/dic/category',
         method: 'delete',
         data: Qs.stringify({ids: params}),
         params:{
@@ -59,19 +59,19 @@ export function deleteCategory(params) {
 //字典列表
 export function dictionaryListDic(categoryId) {
     return fetch({
-        url: '/sys/dic/getSysDicList',
-        method: 'get',
+        url: '/base/dic/pageList',
+        method: 'post',
         data: Qs.stringify({categoryId:categoryId}),
-        params:{
-            categoryId:categoryId
-        }
+        // params:{
+        //     categoryId:categoryId
+        // }
     })
 }
 
-//字典参数列表
+//字典参数列表       无------
 export function dictionaryListDicByParent(params) {
     return fetch({
-        url: '/sys/dic/getSysDicList',
+        url: '/base/dic/getSysDicList',
         method: 'get',
         params:{
             parentKey:params.parentKey
@@ -83,7 +83,7 @@ export function dictionaryListDicByParent(params) {
 //字典新增
 export function addDic(params) {
     return fetch({
-        url: '/sys/dic/addSysDic',
+        url: '/base/dic',
         method: 'post',
         params
     })
@@ -92,7 +92,7 @@ export function addDic(params) {
 //字典编辑
 export function detailDic(dicId) {
     return fetch({
-        url: '/sys/dic/getSysDicById',
+        url: '/base/dic/findById',
         method: 'get',
         data: Qs.stringify({dicId:dicId}),
         params:{
@@ -103,7 +103,7 @@ export function detailDic(dicId) {
 //字典提交
 export function submitDic(params) {
     return fetch({
-        url: '/sys/dic/updateSysDic',
+        url: '/base/dic',
         method: 'put',
         params
     })
@@ -111,7 +111,7 @@ export function submitDic(params) {
 //字典删除
 export function deleteDic(params) {
     return fetch({
-        url: '/sys/dic/deleteSysDic',
+        url: '/base/dic',
         method: 'delete',
         data: Qs.stringify({ids: params}),
         params:{
