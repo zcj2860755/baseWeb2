@@ -13,7 +13,7 @@ import Qs from 'qs'
 //编辑权限
 export function editAuth(authId){
   return fetch({
-    url:'/authority/'+authId,
+    url:'/base/authority/'+authId,
     method:'get',
     data: Qs.stringify({authId:authId})
   })
@@ -30,25 +30,25 @@ export function editAuth(authId){
 //提交新增权限信息
 export function authAddSubmit(params) {
   return fetch({
-    url: '/authority',
+    url: '/base/authority',
     method: 'post',
     params
-  }) 
+  })
  }
 
  //提交编辑权限信息
 export function authUpdateSubmit(params) {
   return fetch({
-    url: '/authority',
+    url: '/base/authority',
     method: 'put',
     params
-  }) 
+  })
  }
 
 //验证权限标识唯一性
 export function verifyAuthSign(authSign,authId){
   return fetch({
-    url:'/authority/existAuthSign',
+    url:'/base/authority/existAuthSign',
     method:'get',
     params: {authSign:authSign,id:authId}
   })
@@ -57,7 +57,7 @@ export function verifyAuthSign(authSign,authId){
 //获取所有权限树级联
 export function getAllAuthority(authId){
   return fetch({
-    url:'/authority/List',
+    url:'/base/authority/List',
     method:'post',
     data: Qs.stringify({authId:authId})
   })

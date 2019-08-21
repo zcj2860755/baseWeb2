@@ -68,15 +68,15 @@ export function dictionaryListDic(categoryId) {
     })
 }
 
-//字典参数列表       无------
+//字典参数列表
 export function dictionaryListDicByParent(params) {
-    return fetch({
-        url: '/base/dic/getSysDicList',
-        method: 'get',
-        params:{
-            parentKey:params.parentKey
-        }
-    })
+  return fetch({
+    url: '/base/dic/getDicByDicKey',
+    method: 'get',
+    params:{
+      dicKey:params.parentKey
+    }
+  })
 }
 
 
