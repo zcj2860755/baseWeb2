@@ -32,7 +32,7 @@
           <template slot-scope="scope">
             <el-button size="medium" style="color:#4687BE" type="text" @click="edit(scope.row.id,scope.row.groupId)">编辑</el-button>
             <template >
-            <el-button size="medium" style="color:#4687BE" type="text"  @click="stop(scope.row.id,scope.row.status)" v-if="scope.row.status==0">停用</el-button>
+            <el-button size="medium" style="color:#4687BE" type="text"  @click="stop(scope.row)" v-if="scope.row.status==0">停用</el-button>
             <el-button size="medium" style="color:#4687BE" type="text"  @click="stop(scope.row.id,scope.row.status)" v-if="scope.row.status==1">启用</el-button>
            </template>
             <el-button size="medium" style="color:#F78989" type="text"  @click="remove(scope.row.id)">删除</el-button>
@@ -240,9 +240,9 @@
         this.$router.push({path:"/system/account/accountEdit", query: {id: id}})
       },
       //冻结和解冻
-      stop: function (id,status) {
+      stop: function (data) {
         var statusName = '';
-        if(status == 0){
+        if(data.status == 0){
           status =1
           statusName = '冻结';
         }else{
@@ -255,16 +255,15 @@
           type: 'warning'
         }).then(() => {
           var params = {};
-          params.id = id;
-          this.init(id,this.formData)
+          params.id = data.id;
           params.status = status;
-          params.account =this.formData.account
-          params.realName = this.formData.realName
-          params.roleId = this.formData.roleId
-          params.tel = this.formData.tel
+          params.account =data.account
+          params.realName = data.realName
+          params.roleId = data.roleId
+          params.tel = data.tel
           params.uuid = getToken()
-          params.email = this.formData.email
-          params.proId = this.formData.proId
+          params.email = data.email
+          params.proId = data.proId
           editAccount(params).then(response => {
             if (response.success) {
               this.$message({
