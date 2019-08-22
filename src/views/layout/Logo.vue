@@ -1,6 +1,6 @@
 <template>
   <div class="vue-logo-container">
-    <div class="vue-logo-content">北斗短报文智慧管理平台</div>
+    <div class="vue-logo-content">基础模块公共平台</div>
   </div>
 </template>
 <style lang="scss">

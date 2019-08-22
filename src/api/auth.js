@@ -4,7 +4,7 @@ import Qs from 'qs'
 //权限列表
 export function authList(params) {
   return fetch({
-    url: 'base/authority/getAllAuthList',
+    url: '/base/authority/getAllAuthList',
     method: 'get',
     params:{
         pageNo:params.pageNo,
@@ -19,7 +19,7 @@ export function authList(params) {
 //删除权限
 export function deleteAuth(id) {
   return fetch({
-    url: 'base/authority/'+id,
+    url: '/base/authority/'+id,
     method: 'delete'
   })
 }
@@ -28,7 +28,7 @@ export function deleteAuth(id) {
  //获取所有角色路由
  export function getRoleAuthAll () {
   return fetch({
-    url: 'base/authority/List',
+    url: '/base/authority/List',
     method: 'post'
   })
 }
@@ -37,7 +37,7 @@ export function deleteAuth(id) {
 //新增时默认权限列表（首页）
 export  function defaultAuth(params){
   return fetch({
-    url:'base/authority/defaultAuth',
+    url:'/base/authority/defaultAuth',
     method:'get'
   })
 }

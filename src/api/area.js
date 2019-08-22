@@ -4,7 +4,7 @@ import Qs from 'qs'
 //下拉框多级联动获取
 export function areaSelect(id) {
     return fetch({
-        url: '/sys/area/selectListByParentId',
+        url: '/area/selectProvinceCityAreaList',
         method: 'get',
         params:{
             id:id
