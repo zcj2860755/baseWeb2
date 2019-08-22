@@ -2,46 +2,19 @@
   <div class="headtopbar">
     <el-menu class="navbar" mode="horizontal">
       <logo></logo>
-      <!-- <sidebar></sidebar> -->
-
       <el-dropdown class="avatar-container">
         <div class="avatar-wrapper">
-          <!-- <img class="user-avatar" src="../../assets/images/avatardefault.jpg"> -->
           <div class="login-name">{{realName}}</div>
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu class="user-dropdown" slot="dropdown">
-          <!-- <router-link class='inlineBlock' to="/">
-            <el-dropdown-item>
-              首页
-            </el-dropdown-item>
-          </router-link> -->
           <el-dropdown-item ><span @click="revisePassword" style="display:block;">修改密码</span></el-dropdown-item>
           <el-dropdown-item ><span @click="logout" style="display:block;">退出登录</span></el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-
-
-      <!-- <div style="text-align: right;">
-        <div class="news">
-          <a href="#" @click="jump('/message/inbox')"><img src="../../assets/images/email.png"/>未读消息{{count}}条</a>
-        </div>
-      </div> -->
-     <!-- <div class="noticeCount">
-        <router-link class='inlineBlock fr' to="/message/inbox" title="收件箱">
-          <img src="../../assets/images/inbox.png" width="35" height="35"/>
-          <div class="numCount" v-if="noticeCount!=0"><el-badge :value="noticeCount" :max="99" v-model="noticeCount"></el-badge></div>
-        </router-link>
-      </div>
-      <div class="noticeCount">
-        <router-link class='inlineBlock fr' to="/sos/sosInbox" title="紧急SOS">
-          <img src="../../assets/images/sos.png" width="35" height="35"/>
-          <div class="numCount" v-if="sosCount!=0"><el-badge :value="sosCount" :max="99" v-model="sosCount"></el-badge></div>
-        </router-link>
-      </div>-->
       <div class="dayData"><i class="el-icon-date"></i> {{dayData1}}(农历{{dayData}})</div>
       <div  class="loginUser">
-        <div class="login-name">{{account}} 欢迎您！</div>
+        <div class="login-name">{{realName}} 欢迎您！</div>
       </div>
     </el-menu>
   </div>
@@ -62,7 +35,6 @@ export default {
         value1: true,
         value2: false,
         accountId: '',
-        account:getAccount(),
         realName:getRealName(),
         count:'',
         alarmNumber: '',

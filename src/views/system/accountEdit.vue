@@ -12,32 +12,18 @@
             <el-form-item label="姓名" prop="realName">
               <el-input v-model="formData.realName" @blur="fixinput('realName')" @change="forbiddenAutoFill($event,'realName')" placeholder="请输入姓名或单位名称"></el-input>
             </el-form-item>
+            <el-form-item label="角色" prop="roleId">
+              <el-select v-model="formData.roleId" placeholder="请选择角色"  style="width:100%">
+                <el-option v-for="item in roles" :key="item.id" :label="item.roleName" :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="手机号码" prop="tel">
               <el-input v-model="formData.tel" @blur="fixinput('tel')" @change="forbiddenAutoFill($event,'tel')"placeholder="请输入联系方式"></el-input>
             </el-form-item>
             <el-form-item label="电子邮箱" prop="email">
               <el-input v-model="formData.email" @blur="fixinput('email')" @change="forbiddenAutoFill($event,'email')"></el-input>
             </el-form-item>
-            <el-form-item label="角色" prop="roleId">
-                <el-select v-model="formData.roleId" placeholder="请选择角色"  style="width:100%">
-                   <el-option v-for="item in roles" :key="item.id" :label="item.roleName" :value="item.id">
-                  </el-option>
-                </el-select>
-            </el-form-item>
-           <!-- <el-form-item label="分组" prop="groupId">
-              <el-cascader
-                separator=">"
-                clearable
-                change-on-select
-                @change="handleItemChange"
-                :options="groups"
-                v-model="groupId"
-                :props="groupProps"
-                placeholder="请选择所属的分组"
-                style="width:100%"
-                ref="cascader2">
-              </el-cascader>
-            </el-form-item>-->
           </el-form>
          </el-col>
       </el-row>
@@ -126,13 +112,12 @@
         countyindex: '',
         response: [],
         roles:[],
-        commands:[],
-        groupId:[],
+        proIds:[],
         formData: {
           account: '',
           password: '',
           realName: '',
-          groupId:'',
+          proId:'',
           roleId:'',
           tel:'',
           email: ''
@@ -159,9 +144,9 @@
             { validator:validPhone, trigger: 'blur' }
             ],
           email: [{ message: '请输入邮箱', trigger: 'blur' }],
-         /* groupId: [
-            { required: true, message: '请选择分组', trigger: 'change' }
-          ],*/
+         groupId: [
+            { required: false, message: '请选择分组', trigger: 'change' }
+          ],
           roleId: [
             { required: true, message: '请选择角色', trigger: 'change' }
           ],
@@ -185,7 +170,6 @@
         that.tableHeight = `${document.documentElement.clientHeight-305}px`;
         that.rowHeight = `${document.documentElement.clientHeight-230}px`;
       };
-      this.groupChange('')
       if(this.$route.query.id){
         this.formData.id=this.$route.query.id
         this.init(this.$route.query.id)
@@ -194,167 +178,6 @@
 
     },
     methods: {
-      groupChange2(id){
-        groupSelectEdit(id).then(response => {
-          this.level = response.data[0].grade
-          this.groups=response.data
-          this.groupId=response.data[0].ids
-        })
-
-        groupSelect().then(response => {
-          this.response[0]=response.data
-        })
-      },
-      groupChange(id,ids){
-        groupSelect(id).then(response => {
-          if(response.data.length>0){
-            setTimeout(() => {
-                if(this.groups.length>0 && this.groups[0].grade<5 && response.data[0].grade<5 && this.i!==1){
-                  this.$refs.cascader2.menuVisible=true
-                }
-            }, 5);
-            this.i++
-            if(this.relativeLevel === ''){
-               this.relativeLevel = response.data[0].grade-1;
-            }
-            var allLevel = 5 - this.relativeLevel;
-            this.level = response.data[0].grade-this.relativeLevel
-            this.response[this.level - 1] = response.data
-            if (this.level < allLevel) {
-              for(let i=0;i<response.data.length;i++){
-                response.data[i].childTSysGroup=[]
-              }
-            }
-            if (this.level <= allLevel) {
-              if (this.level === 2) {
-                this.cityindex = this._.findIndex(this.response[0], [
-                  'id',
-                  id,
-                ])
-                if(this.groups.length >0 ){
-                  this.groups[this.cityindex].childTSysGroup = response.data
-                }else{
-                  this.groups = response.data
-                  this.cityindex = 0
-                }
-              } else if (this.level === 3) {
-                this.countyindex = this._.findIndex(this.response[1], [
-                  'id',
-                  id,
-                ])
-                if(this.response[this.level-2]){
-                  if(this.groups[this.cityindex].childTSysGroup.length > 0){
-                    this.groups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup = response.data
-                  }else{
-                    this.groups[this.cityindex].childTSysGroup = response.data
-                  }
-                }else{
-                  this.cityindex = this._.findIndex(this.response[0], [
-                    'id',
-                    ids[0],
-                  ])
-                  this.groups[this.cityindex].childTSysGroup[0].childTSysGroup = response.data
-                }
-
-              } else if (this.level === 4) {
-                if(this.response[2]){
-                  this.blockindex = this._.findIndex(this.response[2], [
-                    'id',
-                    id,
-                  ])
-                }else{
-                  this.blockindex=0
-                }
-                if(this.response[1]&&this.response[2]){
-                  if(this.groups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup.length > 0){
-                    this.groups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup = response.data
-                  }else{
-                    this.groups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup = response.data
-                  }
-                }else{
-                  if(this.response[0]){
-                    this.cityindex = this._.findIndex(this.response[0], [
-                      'id',
-                      ids[0],
-                    ])
-                  }else{
-                    this.cityindex=0
-                  }
-
-                  if(this.response[1]){
-                    this.countyindex = this._.findIndex(this.response[1], [
-                      'id',
-                      ids[1],
-                    ])
-                  }else{
-                    this.countyindex=0
-                  }
-
-                  this.groups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup = response.data
-                }
-
-              } else if (this.level === 5) {
-                if(this.response[1] && this.response[2] && this.response[3]){
-                  this.unitindex = this._.findIndex(this.response[3], [
-                    'id',
-                    id,
-                  ])
-                  if(this.groups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup.length > 0){
-                    this.groups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup[this.unitindex].childTSysGroup = response.data
-                  }else{
-                    this.groups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup = response.data
-                    this.groups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup[this.unitindex].childTSysGroup =null
-                  }
-                }else{
-                    if(this.response[0]){
-                      this.cityindex = this._.findIndex(this.response[0], [
-                        'id',
-                        ids[0],
-                      ])
-                    }else{
-                      this.cityindex=0
-                    }
-                    if(this.response[1]){
-                      this.countyindex = this._.findIndex(this.response[1], [
-                        'id',
-                        ids[1],
-                      ])
-                    }else{
-                      this.countyindex = 0
-                    }
-                    if(this.response[2]){
-                      this.blockindex = this._.findIndex(this.response[2], [
-                        'id',
-                        ids[2],
-                      ])
-                    }else{
-                       this.blockindex=0
-                    }
-                    if(this.response[3]){
-                      this.unitindex = this._.findIndex(this.response[3], [
-                        'id',
-                        ids[3],
-                      ])
-                    }else{
-                      this.unitindex = 0
-                    }
-                    this.groups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup[this.unitindex].childTSysGroup = response.data
-                }
-
-              }  else {
-                this.groups = response.data
-              }
-            } else {
-              return 0
-            }
-          }
-        })
-      },
-      handleItemChange(val) {
-        var id = val[val.length-1]
-        this.groupChange(id,val)
-        this.formData.groupId=id
-      },
       forbiddenAutoFill(val,name){
         var isSupportPlaceholder = 'placeholder' in document.createElement('input')
         if(!isSupportPlaceholder){
@@ -367,7 +190,6 @@
 
       edit: function (id,groupId) {
         var params={};
-        this.groupChange('');
         this.init(id,this.formData,groupId)
       },
       //冻结和解冻
@@ -440,11 +262,10 @@
           that.realName = response.data.realName
           that.status = response.data.status.toString()
           that.roleId = response.data.roleId
-          that.groupId = response.data.groupId
+          that.proId = response.data.proId
           that.tel = response.data.tel
           that.email = response.data.email
           this.oldVue= response.data.account
-          this.groupChange2(response.data.groupId)
         })
 
       },
@@ -453,15 +274,12 @@
           this.roles = response.data
         })
       },
-    /*  getCommandCardList(){
-        getCommandCardList(this.commonList).then(response => {
-          this.commands = response.data.list
-          console.log("test:"+response.data.list)
+      findProjectByAccount(id){
+        groupSelect().then(response => {
+          this.proIds = response.data
         })
-      },*/
+      },
       submitForm (formName) {
-        this.formData.groupId=this.groupId[this.groupId.length-1]
-        //console.log(this.groupId)
         this.$refs[formName].validate(valid => {
           if (valid) {
             if (!this.formData.id) {
@@ -472,7 +290,7 @@
               params.roleId = this.formData.roleId;
               params.tel = this.formData.tel;
               params.email  = this.formData.email;
-              // params.groupId = this.formData.groupId;
+              params.proId = this.formData.proId;
               params.uuid = getToken();
               submitAccount(params).then(response => {
                 if (response.success) {
@@ -496,7 +314,9 @@
               params.password = this.formData.password;
               params.status = this.formData.status;
               params.roleId = this.formData.roleId;
-              // params.groupId = this.formData.groupId;
+              params.proId = this.formData.proId;
+              params.tel = this.formData.tel;
+              params.uuid = getToken();
               editAccount(params).then(response => {
                 if (response.success) {
                   this.$message({
