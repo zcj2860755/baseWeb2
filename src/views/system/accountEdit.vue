@@ -12,13 +12,19 @@
             <el-form-item label="姓名" prop="realName">
               <el-input v-model="formData.realName" @blur="fixinput('realName')" @change="forbiddenAutoFill($event,'realName')" placeholder="请输入姓名或单位名称"></el-input>
             </el-form-item>
+            <el-form-item label="手机号码" prop="tel">
+              <el-input v-model="formData.tel" @blur="fixinput('tel')" @change="forbiddenAutoFill($event,'tel')"placeholder="请输入联系方式"></el-input>
+            </el-form-item>
+            <el-form-item label="电子邮箱" prop="email">
+              <el-input v-model="formData.email" @blur="fixinput('email')" @change="forbiddenAutoFill($event,'email')"></el-input>
+            </el-form-item>
             <el-form-item label="角色" prop="roleId">
                 <el-select v-model="formData.roleId" placeholder="请选择角色"  style="width:100%">
                    <el-option v-for="item in roles" :key="item.id" :label="item.roleName" :value="item.id">
                   </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="分组" prop="groupId">
+           <!-- <el-form-item label="分组" prop="groupId">
               <el-cascader
                 separator=">"
                 clearable
@@ -31,13 +37,7 @@
                 style="width:100%"
                 ref="cascader2">
               </el-cascader>
-            </el-form-item>
-            <el-form-item label="指挥卡" prop="command_id">
-              <el-select v-model="formData.command_id" placeholder="请选择所属的指挥卡" style="width:100%">
-                <el-option v-for="item in commands" :key="item.id" :label="item.name" :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
+            </el-form-item>-->
           </el-form>
          </el-col>
       </el-row>
@@ -54,7 +54,7 @@
   import TablePagination from '@/components/Table/PagiContainer'
   import {mapGetters} from 'vuex'
   import {btnauth} from '@/components/Mixin/btnauth'
-  import {getAccountId, getRoleId,setRealName} from '@/utils/auth'
+  import {getAccountId, getRoleId,setRealName,getToken} from '@/utils/auth'
   import { placeholderie } from '@/components/Mixin/placeholderie'
   import { editAccount, submitAccount,verifyAccount,AccountInfo} from '@/api/accountDetail'
   import {findRoleByAccount} from '@/api/role'
@@ -82,6 +82,17 @@
         }else if(!validateNumberAndEnglish(value)){
           callback(new Error('请输入数字或英文!'))
         }else{
+          callback()
+        }
+      }
+
+      var validPhone=(rule, value,callback)=>{
+        // if (!value){
+        //     callback(new Error('请输入手机号码'))
+        // }else
+        if (value&&!isvalidPhone(value)){
+          callback(new Error('请输入正确的11位手机号码'))
+        }else {
           callback()
         }
       }
@@ -123,7 +134,8 @@
           realName: '',
           groupId:'',
           roleId:'',
-          command_id:'',
+          tel:'',
+          email: ''
         },
         ieForm:{
           pass: '',
@@ -142,15 +154,17 @@
           password: [
             {required: true, min: 6, max: 20, message: '请保持长度在 6 到 20 位', trigger: 'blur' }
           ],
-          groupId: [
+          tel: [
+            {required: true, message: '请输入手机号码', trigger: 'blur'},
+            { validator:validPhone, trigger: 'blur' }
+            ],
+          email: [{ message: '请输入邮箱', trigger: 'blur' }],
+         /* groupId: [
             { required: true, message: '请选择分组', trigger: 'change' }
-          ],
+          ],*/
           roleId: [
             { required: true, message: '请选择角色', trigger: 'change' }
           ],
-          command_id: [
-            { required: true, message: '请选择指挥卡', trigger: 'change' }
-          ]
         }
       }
     },
@@ -160,7 +174,7 @@
     mixins: [btnauth,placeholderie,fixie9input],
     created() {
       this.findRoleByAccount()
-      this.getCommandCardList(this.commonList)
+      // this.getCommandCardList(this.commonList)
     },
     mounted() {
       let screenHeight=document.documentElement.clientHeight;
@@ -426,8 +440,9 @@
           that.realName = response.data.realName
           that.status = response.data.status.toString()
           that.roleId = response.data.roleId
-          that.command_id = response.data.command_id
           that.groupId = response.data.groupId
+          that.tel = response.data.tel
+          that.email = response.data.email
           this.oldVue= response.data.account
           this.groupChange2(response.data.groupId)
         })
@@ -438,12 +453,12 @@
           this.roles = response.data
         })
       },
-      getCommandCardList(){
+    /*  getCommandCardList(){
         getCommandCardList(this.commonList).then(response => {
           this.commands = response.data.list
           console.log("test:"+response.data.list)
         })
-      },
+      },*/
       submitForm (formName) {
         this.formData.groupId=this.groupId[this.groupId.length-1]
         //console.log(this.groupId)
@@ -454,9 +469,11 @@
               params.account = this.formData.account;
               params.password = this.formData.password;
               params.realName = this.formData.realName;
-              params.command_id = this.formData.command_id;
               params.roleId = this.formData.roleId;
-              params.groupId = this.formData.groupId;
+              params.tel = this.formData.tel;
+              params.email  = this.formData.email;
+              // params.groupId = this.formData.groupId;
+              params.uuid = getToken();
               submitAccount(params).then(response => {
                 if (response.success) {
                   this.$message({
@@ -479,8 +496,7 @@
               params.password = this.formData.password;
               params.status = this.formData.status;
               params.roleId = this.formData.roleId;
-              params.groupId = this.formData.groupId;
-              params.command_id = this.formData.command_id;
+              // params.groupId = this.formData.groupId;
               editAccount(params).then(response => {
                 if (response.success) {
                   this.$message({

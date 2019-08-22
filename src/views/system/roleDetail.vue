@@ -88,8 +88,7 @@ export default {
         id:'',
         roleName:'',
         isLogin:'0',
-        status:"0",
-        createTime:''
+        status:"0"
       },
       authIds:[],
       orgs:[],
@@ -128,7 +127,7 @@ export default {
       editRole(id).then(response =>{
         that.id = response.data.id
         that.roleName = response.data.roleName
-        that.createTime = response.data.createTime
+        // that.createTime = response.data.createTime
         that.isLogin=response.data.isLogin.toString()
         local.getRoleTree(that.id)
         if(response.data.authIds!=[]){

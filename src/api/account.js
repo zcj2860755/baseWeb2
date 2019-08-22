@@ -1,4 +1,5 @@
 import fetch from '@/utils/fetch'
+import {getToken} from '@/utils/auth'
 import Qs from 'qs'
 
 //用户列表
@@ -10,7 +11,7 @@ export function getAccountList(params) {
       searchContent: params.keyword,
       pageNo: params.pageNo,
       pageSize: params.pageSize,
-      uuid : 'be06b273469ea186d7ab212f973d33d2'
+      uuid : getToken()
     }
   })
 }
