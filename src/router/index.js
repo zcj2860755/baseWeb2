@@ -87,9 +87,8 @@ export const constantRouterMap = [
     redirect: '/base/group',
     name: '基础信息',
     icon: 'jichuxinxi',
-    authType:'1',
     children: [
-      /* {path: 'group', name: '分组管理', authType:'1',component: _import('/base/group')}*/
+      {path: 'group', name: '分组管理', authType:'1',component: _import('/base/group')}
     ]
   },
   /*{

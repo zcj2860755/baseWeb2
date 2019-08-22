@@ -1,25 +1,25 @@
 <template>
   <div class="app-small">
-    <div class="listTotal">分组管理（共{{total}}条）</div>
+    <div class="listTotal">项目管理（共{{total}}条）</div>
     <table-operate >
       <el-button type="primary" size="small"  v-if="hasAuth('groupAdd')"  @click="gotoform">添加</el-button>
       <el-button type="danger" size="small" v-if="hasAuth('groupDelete')" @click="batchRemove">删除</el-button>
     </table-operate>
     <table-search>
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
-        <el-form-item label="分组">
-          <el-cascader
-            separator=">"
-            clearable
-            change-on-select
-            @change="handleItemChange2"
-            :options="listGroups"
-            :props="groupProps"
-            v-model="listGroupId"
-            style="width:100%"
-            ref="cascader2">
-          </el-cascader>
-        </el-form-item>
+        <!--<el-form-item label="分组">-->
+          <!--<el-cascader-->
+            <!--separator=">"-->
+            <!--clearable-->
+            <!--change-on-select-->
+            <!--@change="handleItemChange2"-->
+            <!--:options="listGroups"-->
+            <!--:props="groupProps"-->
+            <!--v-model="listGroupId"-->
+            <!--style="width:100%"-->
+            <!--ref="cascader2">-->
+          <!--</el-cascader>-->
+        <!--</el-form-item>-->
         <el-form-item label="关键字">
           <el-input v-model="listQuery.searchContent" clearable @focus="inputfocus('account')" @blur="inputblur('account')" placeholder="分组名称" @keyup.enter.native="doneSubmit"/>
         </el-form-item>
@@ -31,7 +31,7 @@
     <div class="app-container">
       <el-table :data="list" :height="tableHeight" v-loading.body="listLoading" element-loading-text="拼命加载中" @selection-change="handleSelectionChange"  border fit stripe style="with:100%">
         <el-table-column type="selection" width="60" align="center"/>
-        <el-table-column prop="name" label="分组名称" />
+        <el-table-column prop="proName" label="分组名称" />
         <el-table-column prop="parentName" label="所属上级分组" min-width="180"/>
         <el-table-column label="操作" align="center" width="180">
           <template slot-scope="scope">
@@ -58,29 +58,37 @@
       :visible.sync="userDialog.show"
       width="580px">
       <el-row>
-        <el-form :model="formData" :rules="rules" ref="userForm" label-width="120px">
-          <el-form-item label="分组名称" prop="name">
-            <el-input v-model="formData.name" ></el-input>
+        <el-form :model="formData" :rules="rules" ref="userForm" label-width="100px">
+          <el-form-item label="项目名称" prop="proName">
+            <el-input v-model="formData.proName" placeholder="请输入项目名称"></el-input>
           </el-form-item>
-          <el-form-item label="所属上级分组" prop="parentId">
+          <el-form-item label="上级项目" prop="cascadeId">
             <el-cascader
               separator=">"
               clearable
               change-on-select
-              @change="handleItemChange"
-              :options="groups"
-              v-model="groupId"
-              :props="groupProps"
-              style="width:100%"
-              ref="cascader3">
+              :options="data2"
+              :props="defaultProps"
+              @change="parentIdChange"
+              v-model="formData.cascadeId">
             </el-cascader>
+          </el-form-item>
+          <el-form-item label="管理员" prop="userIds">
+            <el-select v-model="formData.userIds" multiple placeholder="请选择管理员" style="width:100%">
+              <!--<el-option-->
+                <!--v-for="item in options"-->
+                <!--:key="item.id"-->
+                <!--:label="`${item.realName}（${item.account}）`"-->
+                <!--:value="item.id">-->
+              <!--</el-option>-->
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('userForm')">确认</el-button>
+            <el-button @click="resetForm('userForm')">取消</el-button>
           </el-form-item>
         </el-form>
       </el-row>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm('userForm')">保存</el-button>
-        <el-button @click="resetForm('userForm')">取消</el-button>
-      </span>
     </el-dialog>
 
   </div>
@@ -94,7 +102,7 @@
   import {btnauth} from '@/components/Mixin/btnauth'
   import { placeholderie } from '@/components/Mixin/placeholderie'
   import { fixie9input } from '@/components/Mixin/fixie9input'
-  import {groupSelect, groupSelectEdit, groupList, groupAdd, groupEdit, groupDelete} from '@/api/group'
+  import {groupSelect, groupSelectEdit, groupList, groupAdd, groupEdit, groupDelete,projectInfo} from '@/api/group'
   export default {
     components: {
       TableOperate,
@@ -103,347 +111,98 @@
     },
     data() {
       return {
-        oldVue:'',
+        data2: [],
+        defaultProps: {
+          children: 'childTSysProject',
+          label: 'proName',
+          value:'id'
+        },
+        proIds:[],
+        options: [],
+        selectList:[],
+        selectName:'',
         tableHeight:' ',
-        nowgroups:[],
-        listGroups:[],
-        listGroupId:[],
         listQuery: {
-          searchContent: '',
-          id: '',
+          keyword: '',
+          status: '',
+          sex: '',
+          roleId: '',
+          orgId: '',
           pageNo: 1,
           pageSize: 10
         },
         total: 1000,
         list: null,
-        listLoading: true,
+        listLoading: false,
         currentPage: 1,
         pagishow: false,
-        multipleSelection: [],
-        // 详情弹框
         userDialog: {
           show:false,
           title:''
         },
-        isEdit:false,
-        groups:[],
-        groupId:[],
-        groupProps:{
-          value : "id",
-          label : "name",
-          children: 'childTSysGroup'
+        stopDialog: {
+          show:false,
+          title:''
         },
-        i:0,
-        z:1,
-        grade:'',
-        level: '',
-        relativeLevel:'',
-        cityindex: '',
-        countyindex: '',
-        blockindex:'',
-        unitindex:'',
-        response: [],
-        detailTurn:0,
+        multipleSelection: [],
         formData: {
-          name: '',
-          parentName: '',
-          parentId:''
-        },
-        ieForm:{
-          name: '',
-          parentName: '',
+          id:'',
+          proName: '',
+          parentId: '',
+          userIds: [],
+          cascadeId:[]
         },
         rules: {
-          name: [
-            { required: true, message: '请输入分组名称', trigger: 'blur' }
-          ],
-          parentId: [
-            { required: true, message: '请选择所属上级分组', trigger: 'change'}
-            ]
+          proName: [
+            { required: true, message: '请输入项目名称', trigger: 'blur' }
+          ]
         }
       }
     },
     computed: {
       ...mapGetters(['permission_routers']),
     },
-    mixins: [btnauth,placeholderie,fixie9input],
+    mixins: [btnauth,placeholderie],
     created() {
       this.fetchData()
     },
     mounted() {
       let screenHeight=document.documentElement.clientHeight;
-      this.tableHeight = screenHeight-352 +'px';
+      let screenWidth=document.documentElement.clientWidth;
+      this.tableHeight = screenHeight-299 +'px';
       const that = this;
       window.onresize = function temp() {
-        that.tableHeight = `${document.documentElement.clientHeight-352}px`;
+        that.tableHeight = `${document.documentElement.clientHeight-299}px`;
       };
-      this.groupChange('')
-      this.listGroupsChange('')
     },
     methods: {
-      groupChange2(id){
-        groupSelectEdit(id).then(response => {
-          this.level = response.data[0].grade
-          this.groups=response.data
-          this.nowgroups=response.data
-          var idsLength=response.data[0].ids.length
-          this.groupId=response.data[0].ids
-        })
-        groupSelect().then(response => {
-          this.response[0]=response.data
-        })
+      //时间格式化
+      dateFormat(row, column) {
+        let date = row[column.property];
+        return date ? moment(date).format("YYYY-MM-DD HH:mm:ss") : "";
       },
-      groupChange(id,ids){
-        groupSelect(id).then(response => {
-          if(response.data.length>0){
-            setTimeout(() => {
-                if(this.groups.length>0 && this.groups[0].grade<5 && response.data[0].grade<5 && this.i!==1){
-                  this.$refs.cascader3.menuVisible=true
-                }
-            }, 5);
-            this.i++
-            if(this.relativeLevel === ''){
-               this.relativeLevel = response.data[0].grade-1;
-            }
-            var actuallevel = 5 - this.relativeLevel;
-            this.level = response.data[0].grade-this.relativeLevel
-            this.response[this.level - 1] = response.data
-      
-            if (this.level < actuallevel) {
-              for(let i=0;i<response.data.length;i++){
-                response.data[i].childTSysGroup=[]
-              }
-            }
-            // console.log(this.level)
-            if (this.level <= actuallevel) {
-              if (this.level === 2) {
-                this.cityindex = this._.findIndex(this.response[0], [
-                  'id',
-                  id,
-                ])
-                if(this.nowgroups.length >0 ){
-                  this.nowgroups[this.cityindex].childTSysGroup = response.data
-                }else{
-                  this.nowgroups = response.data
-                  this.cityindex = 0
-                }
-              } else if (this.level === 3) {
-                this.countyindex = this._.findIndex(this.response[1], [
-                  'id',
-                  id,
-                ])
-                if(this.response[1]){
-                  if(this.nowgroups[this.cityindex].childTSysGroup.length > 0){
-                    this.nowgroups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup = response.data
-                  }else{
-                    this.nowgroups[this.cityindex].childTSysGroup = response.data
-                  }
-                }else{
-                  this.cityindex = this._.findIndex(this.response[0], [
-                    'id',
-                    ids[0],
-                  ])
-                  this.nowgroups[this.cityindex].childTSysGroup[0].childTSysGroup = response.data
-                }
-
-
-              } else if (this.level === 4) {
-                this.blockindex = this._.findIndex(this.response[2], [
-                  'id',
-                  id,
-                ])
-                // console.log(this.response[1])
-                // console.log(this.response[2])
-                if(this.response[1]&&this.response[2]){
-                  if(this.nowgroups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup.length > 0){
-                    this.nowgroups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup = response.data
-                  }else{
-                    this.nowgroups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup = response.data
-                  }
-                }else if(!this.response[1]&&!this.response[2]){
-                  // console.log(111)
-                  this.cityindex = this._.findIndex(this.response[0], [
-                    'id',
-                    ids[0],
-                  ])
-                  this.nowgroups[this.cityindex].childTSysGroup[0].childTSysGroup[0].childTSysGroup = response.data
-                }else if(!this.response[1]&&this.response[2]){
-                  // console.log(222)
-                  this.cityindex = this._.findIndex(this.response[0], [
-                    'id',
-                    ids[0],
-                  ])
-                  this.countyindex = this._.findIndex(this.response[1], [
-                    'id',
-                    ids[1],
-                  ])
-                  this.nowgroups[this.cityindex].childTSysGroup[0].childTSysGroup[this.blockindex].childTSysGroup = response.data
-                }
-
-              } else if (this.level === 5) {
-                this.unitindex = this._.findIndex(this.response[3], [
-                  'id',
-                  id,
-                ])
-                if(this.nowgroups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup.length > 0){
-                  this.nowgroups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup[this.unitindex].childTSysGroup = response.data
-                }else{
-                  this.nowgroups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup = response.data
-                  this.nowgroups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup[this.unitindex].childTSysGroup =null
-                }
-
-              }  else {
-                this.nowgroups = response.data
-              }
-              
-              this.groups = this.nowgroups
-              
-            } else {
-              return 0
-            }
-          }
-        })
-      },
-      // 上级分组
-      handleItemChange(val) {
-        // console.log(val)
-        var id=val[val.length-1]
-        this.groupChange(id,val)
-        this.formData.parentId=this.groupId[this.groupId.length-1]
-      },
-      // 分组查询
-      handleItemChange2(val) {
-        var id=val[val.length-1]
-        this.listGroupsChange(id)
-      },
-      listGroupsChange(id,ids){
-        groupSelect(id).then(response => {
-          if(response.data.length>0){
-            if(this.z==1){
-              this.grade=response.data[0].grade-1
-              this.z++
-            }
-            this.level = response.data[0].grade-this.grade
-            var actuallevel=5-this.grade
-            this.response[this.level - 1] = response.data
-            if (this.level < actuallevel) {
-              for(let i=0;i<response.data.length;i++){
-                response.data[i].childTSysGroup=[]
-              }
-            }
-      
-            if (this.level < actuallevel) {
-              for(let i=0;i<response.data.length;i++){
-                response.data[i].childTSysGroup=[]
-              }
-            }
-            // console.log(this.level)
-            if (this.level <= actuallevel) {
-              if (this.level === 2) {
-                this.cityindex = this._.findIndex(this.response[0], [
-                  'id',
-                  id,
-                ])
-                if(this.nowgroups.length >0 ){
-                  this.nowgroups[this.cityindex].childTSysGroup = response.data
-                }else{
-                  this.nowgroups = response.data
-                  this.cityindex = 0
-                }
-              } else if (this.level === 3) {
-                this.countyindex = this._.findIndex(this.response[1], [
-                  'id',
-                  id,
-                ])
-                if(this.response[1]){
-                  if(this.nowgroups[this.cityindex].childTSysGroup.length > 0){
-                    this.nowgroups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup = response.data
-                  }else{
-                    this.nowgroups[this.cityindex].childTSysGroup = response.data
-                  }
-                }else{
-                  this.cityindex = this._.findIndex(this.response[0], [
-                    'id',
-                    ids[0],
-                  ])
-                  this.nowgroups[this.cityindex].childTSysGroup[0].childTSysGroup = response.data
-                }
-
-
-              } else if (this.level === 4) {
-                this.blockindex = this._.findIndex(this.response[2], [
-                  'id',
-                  id,
-                ])
-                if(this.response[1]&&this.response[2]){
-                  if(this.nowgroups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup.length > 0){
-                    this.nowgroups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup = response.data
-                  }else{
-                    this.nowgroups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup = response.data
-                  }
-                }else if(!this.response[1]&&!this.response[2]){
-                  // console.log(111)
-                  this.cityindex = this._.findIndex(this.response[0], [
-                    'id',
-                    ids[0],
-                  ])
-                  this.nowgroups[this.cityindex].childTSysGroup[0].childTSysGroup[0].childTSysGroup = response.data
-                }else if(!this.response[1]&&this.response[2]){
-                  // console.log(222)
-                  this.cityindex = this._.findIndex(this.response[0], [
-                    'id',
-                    ids[0],
-                  ])
-                  this.countyindex = this._.findIndex(this.response[1], [
-                    'id',
-                    ids[1],
-                  ])
-                  this.nowgroups[this.cityindex].childTSysGroup[0].childTSysGroup[this.blockindex].childTSysGroup = response.data
-                }
-
-              } else if (this.level === 5) {
-                this.unitindex = this._.findIndex(this.response[3], [
-                  'id',
-                  id,
-                ])
-                if(this.nowgroups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup.length > 0){
-                  this.nowgroups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup[this.unitindex].childTSysGroup = response.data
-                }else{
-                  this.nowgroups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup = response.data
-                  this.nowgroups[this.cityindex].childTSysGroup[this.countyindex].childTSysGroup[this.blockindex].childTSysGroup[this.unitindex].childTSysGroup =null
-                }
-
-              }  else {
-                this.nowgroups = response.data
-              }
-              this.listGroups = this.nowgroups
-            } else {
-              return 0
-            }
-          }
-        })
-      },
-      gotoform() {
-        setTimeout(()=>{
-          this.$refs.userForm.resetFields();
-        },10)
-        this.userDialog.title="新增分组"
+      // 新增项目
+      gotoform(accountId) {
+        this.findList('')
+        this.checkedKeys=[]
+        this.userDialog.title="新增项目"
         this.userDialog.show=true
-        this.groupId=[]
         this.formData={
-          name: '',
-          parentName: '',
-          parentId:''
+          id:'',
+          proName: '',
+          parentId: '',
+          userIds: [],
+          cascadeId:[]
         }
-        // this.groupChange('',2)
+
       },
       doneSubmit: function () {
         this.fetchData()
       },
       fetchData() {
         this.listLoading = true
-        this.listQuery.id=this.listGroupId[this.listGroupId.length-1]
         groupList(this.listQuery).then(response => {
+          // console.log(response)
           this.list = response.data.list
           this.total = response.data.totalCount
           this.listLoading = false
@@ -452,14 +211,76 @@
           }
         })
       },
-      edit: function (id,parentId,name) {
-        this.userDialog.title="分组编辑"
+      // 编辑项目
+      init: function (id,that) {
+        var local = this
+        projectInfo(id).then(response =>{
+          that.id = response.data.id
+          that.parentName = response.data.parentName
+          that.proName = response.data.proName
+          that.userNames = response.data.userNames
+          if(response.data.userIds==null||response.data.userIds==''){
+            that.userIds =[]
+          }else{
+            that.userIds = response.data.userIds
+          }
+          this.findList(id)
+          console.log(response.data.cascadeId)
+          if(response.data.cascadeId!='[]'){
+            let proIds=response.data.cascadeId.length
+            that.cascadeId=response.data.cascadeId.substring(1,proIds-1).split(",")
+            // console.log(that.cascadeId)
+          }else{
+            that.cascadeId=[]
+          }
+
+        })
+      },
+      parentIdChange:function(){
+        // console.log(this.formData.parentId)
+      },
+      // 上级项目
+      findList: function (id) {
+        console.log("上级项目"+id)
+        groupSelect(id).then(response =>{
+          this.data2=response.data
+
+          // const loop = {
+          //   loopTreeItem(item,i,userRoutesItem) {
+          //     userRoutesItem.push(item.id)
+          //     if (item.id==id) {
+          //       return i
+          //     }else if (item.childTSysProject){
+          //       let childrens = item.childTSysProject
+          //       childrens.forEach((childone) => {
+          //         loop.loopTreeItem(childone,i,userRoutesItem)
+          //       })
+          //     }
+          //     return userRoutesItem
+          //   }
+          // }
+          // if(id){
+          //   console.log('id:'+id)
+          //   for(let i in this.data2){
+          //     let userRoutesItem = []
+          //     var item =this.data2[i];
+          //     let treenode =loop.loopTreeItem(item,i,userRoutesItem)
+          //     console.log(treenode)
+          //     if(treenode.indexOf(id) > -1){
+          //       console.log(i)
+          //       this.data2[i].childTSysProject[0].disabled=true
+          //     }
+          //   }
+          // }
+
+
+        })
+      },
+      edit: function (id,accountId,proName) {
+        this.userDialog.title="项目编辑"
         this.userDialog.show=true
-        this.response=[]
-        setTimeout(()=>{
-          this.$refs.userForm.resetFields();
-          this.init(id,parentId,name)
-        },10)
+        this.formData.proName = proName
+        this.init(id,this.formData)
       },
       remove: function (id) {
         this.$confirm('是否确定删除？', '提示', {
@@ -485,7 +306,7 @@
       },
       batchRemove() {
         if (this.multipleSelection.length > 0) {
-          this.$confirm('是否确定删除？', '提示', {
+          this.$confirm('确定要删除已选中的项目？', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
@@ -510,7 +331,7 @@
           })
         } else {
           this.$message({
-            message: '请选择需要删除的分组',
+            message: '请选择需要删除的项目',
             type: 'warning'
           })
         }
@@ -529,64 +350,87 @@
           this.multipleSelection.push(element.id)
         });
       },
-      // 分组详情
-      init: function (id,parentId,name) {
-        var local = this
-        this.formData.id = id
-        this.formData.name = name
-        this.groupChange2(parentId)
-      },
       submitForm (formName) {
-        this.formData.parentId=this.groupId[this.groupId.length-1]
         this.$refs[formName].validate(valid => {
           if (valid) {
-            if (this.userDialog.title == "新增分组") {
-              var params = {};
-              params.name = this.formData.name;
+            if(this.formData.cascadeId.length==0){
+              this.formData.parentId=0
+            }else{
+              let length=this.formData.cascadeId.length
+              this.formData.parentId=this.formData.cascadeId[length-1].toString()
+            }
+            // console.log(this.formData)
+            if(this.userDialog.title=="项目编辑"){
+              var params={} ;
+              params.id = this.formData.id;
+              params.proName = this.formData.proName;
               params.parentId = this.formData.parentId;
-              groupAdd(params).then(response => {
-                if (response.success) {
+              params.userIds = this.formData.userIds;
+              params.cascadeId = this.formData.cascadeId.join(",");
+              groupEdit(params).then(response =>{
+                if(response.success){
                   this.$message({
                     message: response.message,
                     type: 'success'
                   })
-                  this.userDialog.show = false
-                  this.fetchData()
-                } else {
+                }else{
                   this.$message({
                     message: response.message,
                     type: 'warning'
                   })
                 }
+                this.userDialog.show=false
+                this.fetchData()
               })
-            } else if(this.userDialog.title == "分组编辑"){
-              var params = {};
-              params.name = this.formData.name;
+            }else if(this.userDialog.title=="新增项目"){
+              var params={} ;
+              params.proName = this.formData.proName;
+              params.userIds = this.formData.userIds;
               params.parentId = this.formData.parentId;
-              params.id = this.formData.id;
-              groupEdit(params).then(response => {
-                if (response.success) {
+              params.cascadeId = this.formData.cascadeId.join(",");
+              groupAdd(params).then(response =>{
+                if(response.success){
                   this.$message({
                     message: response.message,
                     type: 'success'
                   })
-                  this.userDialog.show = false
-                  this.fetchData()
-                } else {
-                    this.$message({
-                      message: response.message,
-                      type: 'warning'
-                    })
+                }else{
+                  this.$message({
+                    message: response.message,
+                    type: 'warning'
+                  })
                 }
+                this.userDialog.show=false
+                this.fetchData()
               })
             }
+          } else {
+            console.log('error submit!!')
+            return false
           }
+        })
+      },
+      submitStopForm(){
+        submitRoleEdit(this.formData.status).then(response =>{
+          if(response.success){
+            this.$message({
+              message: response.message,
+              type: 'success'
+            })
+          }else{
+            this.$message({
+              message: response.message,
+              type: 'warning'
+            })
+          }
+          this.stopDialog.show=false
         })
       },
       resetForm (formName) {
         this.userDialog.show=false
+        this.stopDialog.show=false
         this.$refs[formName].resetFields();
-      }
+      },
     }
   }
 </script>

@@ -4,7 +4,7 @@ import Qs from 'qs'
 //下拉框多级联动获取
 export function groupSelect(id) {
     return fetch({
-        url: '/sys/group/select',
+        url: '/base/project/findList',
         method: 'get',
         params:{
             id:id
@@ -16,7 +16,7 @@ export function groupSelect(id) {
 //下拉框编辑获取
 export function groupSelectEdit(id) {
     return fetch({
-        url: '/sys/group/edit',
+        url: '/base/project/edit/findList',
         method: 'get',
         params:{
             id:id
@@ -27,7 +27,7 @@ export function groupSelectEdit(id) {
 //分页查询
 export function groupList(params) {
     return fetch({
-        url: '/sys/group',
+        url: '/base/project',
         method: 'get',
         params:{
             id:params.id,
@@ -40,34 +40,24 @@ export function groupList(params) {
 //新增
 export function groupAdd(params) {
     return fetch({
-        url: '/sys/group',
+        url: '/base/project',
         method: 'post',
-        params:{
-            parentId:params.parentId,
-            name :params.name
-        }
+        params
     })
 }
 //更新
 export function groupEdit(params) {
     return fetch({
-        url: '/sys/group',
+        url: '/base/project',
         method: 'put',
-        params:{
-            id:params.id,
-            parentId:params.parentId,
-            name :params.name
-        }
+        params
     })
 }
 //删除
 export function groupDelete(id) {
     return fetch({
-        url: '/sys/group/delete',
-        method: 'delete',
-        params:{
-            id:id
-        }
+        url: '/base/project/'+id,
+        method: 'delete'
     })
 }
 
@@ -81,4 +71,13 @@ export function groupFind(id) {
             id:id
         }
     })
+}
+
+
+//项目详情
+export function projectInfo(projectId){
+  return fetch({
+    url:'/base/project/'+projectId,
+    method:'get'
+  })
 }
