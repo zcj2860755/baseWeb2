@@ -33,7 +33,7 @@
             <el-button size="medium" style="color:#4687BE" type="text" @click="edit(scope.row.id,scope.row.groupId)">编辑</el-button>
             <template >
             <el-button size="medium" style="color:#4687BE" type="text"  @click="stop(scope.row)" v-if="scope.row.status==0">停用</el-button>
-            <el-button size="medium" style="color:#4687BE" type="text"  @click="stop(scope.row.id,scope.row.status)" v-if="scope.row.status==1">启用</el-button>
+            <el-button size="medium" style="color:#4687BE" type="text"  @click="stop(scope.row)" v-if="scope.row.status==1">启用</el-button>
            </template>
             <el-button size="medium" style="color:#F78989" type="text"  @click="remove(scope.row.id)">删除</el-button>
           </template>
