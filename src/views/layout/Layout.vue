@@ -39,7 +39,7 @@
 <script>
 import { Navbar, Sidebar, AppMain,password } from '@/views/layout'
 import { updatePW } from '@/api/accountDetail'
-import {getAccountId} from '@/utils/auth'
+import {getAccountId,getToken} from '@/utils/auth'
 import { fixie9input } from '@/components/Mixin/fixie9input'
 export default {
     name: 'layout',
@@ -130,6 +130,7 @@ export default {
                    //console.log(getAccountId())
                     params.oldPassword = this.formData.oldPassword;
                     params.password = this.formData.password;
+                    params.uuid = getToken();
                     updatePW(params).then(response =>{
                         this.tableData=false
                         if(response.success){
