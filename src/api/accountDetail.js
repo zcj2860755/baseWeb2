@@ -33,7 +33,7 @@ import Qs from 'qs'
   //修改账户密码
   export function updatePW (params){
     return fetch({
-      url:'base/account/updatePW',
+      url:'base/account/updatePW/'+params.id,
       method:'put',
       params
     })
